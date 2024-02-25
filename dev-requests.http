@@ -1,0 +1,15 @@
+### GET ALL SPOTS ###
+GET http://localhost:3000/spots
+
+### CREATE A SPOT ###
+POST http://localhost:3000/spots
+Content-Type: application/json
+
+{
+  "name": "Spot"
+}
+
+### GET A SPOT ###
+GET http://localhost:3000/spots/3
+
+
