@@ -12,4 +12,20 @@ Content-Type: application/json
 ### GET A SPOT ###
 GET http://localhost:3000/spots/3
 
+### GET ALL USERS ###
+GET http://localhost:3000/users
+
+### CREATE A USER ###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "lastName": "Costa",
+  "firstName": "Ricardo",
+  "email": "rkosta@gmail.com",
+  "token": "123456"
+}
+
+### GET A USER ###
+GET http://localhost:3000/users/2
 

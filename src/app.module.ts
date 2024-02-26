@@ -6,6 +6,7 @@ import { BookingsModule } from './bookings/bookings.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Spot } from './spots/spot.entity';
+import { User } from './users/user.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Spot } from './spots/spot.entity';
       port: 5432,
       username: 'deskbird',
       password: 'pass@word1',
-      entities: [Spot],
+      entities: [Spot, User],
       synchronize: true,
     }),
     SpotsModule,

@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { SpotsService } from './spots.service';
 import { CreateSpotDto } from './dtos/create-spot.dto';
 import { GetSpotDto } from './dtos/get-spot.dto';
+import { plainToClass } from 'class-transformer';
+import { SpotDto } from './dtos/spot-dto';
 
 @Controller('spots')
 /* The SpotsController class in TypeScript defines methods for retrieving all spots and creating a new
@@ -23,8 +33,10 @@ export class SpotsController {
    * @returns The `getAllSpots()` function is returning the result of calling the `findAll()` method on
    * the `spotsService` object.
    */
-  getAllSpots() {
-    return this.spotsService.findAll();
+  async getAllSpots() {
+    return (await this.spotsService.findAll()).map((spot) =>
+      plainToClass(SpotDto, spot, { excludeExtraneousValues: true }),
+    );
   }
 
   @Post()
@@ -50,7 +62,11 @@ export class SpotsController {
    * @returns The `findOne` method from the `spotsService` is being called with the `id` property of
    * the `idParam` object as the argument, and the result of this method call is being returned.
    */
-  getSpot(@Param() idParam: GetSpotDto) {
-    return this.spotsService.findOne(idParam.id);
+  async getSpot(@Param() idParam: GetSpotDto) {
+    const spot = await this.spotsService.findOne(idParam.id);
+    if (!spot) {
+      throw new NotFoundException(`Spot with id ${idParam.id} not found`);
+    }
+    return plainToClass(SpotDto, spot, { excludeExtraneousValues: true });
   }
 }
