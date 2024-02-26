@@ -45,10 +45,6 @@ export class User {
   value). */
   email: string;
 
-  @Column({
-    nullable: false,
-    default: false,
-  })
   /* The line `isAdmin: boolean;` in the `User` class is defining a property called `isAdmin` with a 
   type annotation of `boolean`. This property represents the role of a user entity in the database
   table. The `@Column` decorator above the `isAdmin` property specifies that this field corresponds
@@ -56,6 +52,9 @@ export class User {
   `nullable: false`, which means that the `isAdmin` field cannot be null (i.e., it must have a value),
   and `default: false`, which means that the `isAdmin` field will have a default value of `false` if
   not explicitly provided. */
+  @Column({
+    nullable: false,
+  })
   isAdmin: boolean;
 
   @Column({

@@ -30,10 +30,19 @@ Content-Type: application/json
 {
   "lastName": "Costa",
   "firstName": "Ricardo",
-  "email": "rkosta@gmail.com",
-  "token": "123456"
+  "email": "info@teamnub.com",
+  "token": "333333",
+  "isAdmin": true
 }
 
 ### GET A USER ###
-GET http://localhost:3000/users/2
+GET http://localhost:3000/users/5
+
+### UPDATE A USER ###
+PATCH http://localhost:3000/users/5
+Content-Type: application/json
+
+{
+  "firstName": "Ricardo Changed"
+}
 
