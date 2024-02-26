@@ -40,4 +40,19 @@ export class SpotsService {
   async findOne(id: number): Promise<Spot> {
     return this.spotsRepository.findOne({ where: { id } });
   }
+
+  /**
+   * This async function updates a spot in the spots repository by its id and returns the updated spot.
+   * @param {number} id - The `id` parameter is a number that represents the id of a spot.
+   * @param {string} name - The `name` parameter is a string that represents the name of a spot.
+   * @returns A `Spot` object is being returned.
+   */
+  async updateSpot(id: number, name: string): Promise<Spot> {
+    const spot = await this.spotsRepository.findOne({ where: { id } });
+    if (!spot) {
+      return null;
+    }
+    spot.name = name;
+    return this.spotsRepository.save(spot);
+  }
 }

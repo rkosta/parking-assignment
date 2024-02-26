@@ -12,6 +12,14 @@ Content-Type: application/json
 ### GET A SPOT ###
 GET http://localhost:3000/spots/3
 
+### UPDATE A SPOT ###
+PATCH http://localhost:3000/spots/1
+Content-Type: application/json
+
+{
+  "name": "Spot Changed"
+}
+
 ### GET ALL USERS ###
 GET http://localhost:3000/users
 
