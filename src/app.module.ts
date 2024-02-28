@@ -5,22 +5,19 @@ import { SpotsModule } from './spots/spots.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Spot } from './spots/spot.entity';
-import { User } from './users/user.entity';
-import { Booking } from './bookings/booking.entity';
 import { CurrentUserMiddleware } from './middleware/current-user.middleware';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmConfigService } from './type-orm-config.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      database: 'parking',
-      port: 5432,
-      username: 'deskbird',
-      password: 'pass@word1',
-      entities: [Spot, User, Booking],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
+      imports: [ConfigModule],
     }),
     SpotsModule,
     BookingsModule,

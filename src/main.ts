@@ -5,7 +5,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { ErrorInterceptor } from './interceptors/error-interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+  });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ErrorInterceptor());
   await app.listen(3000);
