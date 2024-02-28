@@ -3,9 +3,14 @@ GET http://localhost:3000/bookings
 token: 444444
 
 ### GET A BOOKING ###
-GET http://localhost:3000/bookings/1
-token: 44444
+GET http://localhost:3000/bookings/123
+token: 222222
 
 ### CREATE A BOOKING ###
 POST http://localhost:3000/bookings/create?spot=1
-token: 111111
+token: 222222
+
+### END A BOOKING ###
+POST http://localhost:3000/bookings/15/end
+token: 444444
+

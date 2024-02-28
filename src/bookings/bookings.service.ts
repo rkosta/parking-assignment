@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Booking } from './booking.entity';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Spot } from 'src/spots/spot.entity';
 import { User } from 'src/users/user.entity';
+import { UnauthorizedError } from 'src/common/errors/unauthorized.error';
 
 @Injectable()
 export class BookingsService {
@@ -50,7 +51,6 @@ export class BookingsService {
       }),
       this.userRepository.findOneBy({ id: userId }),
     ]);
-
     // Check if the booking exists
     if (!booking) {
       throw new Error('Booking not found');
@@ -61,7 +61,7 @@ export class BookingsService {
     }
 
     // check if the booking already ended
-    if (!booking.end) {
+    if (booking.end) {
       throw new Error('Booking already ended');
     }
 
@@ -72,7 +72,9 @@ export class BookingsService {
       booking.end = new Date();
       return await this.bookingRepository.save(booking);
     } else {
-      throw new Error('User not authorized');
+      throw new UnauthorizedError(
+        'User does not have permission to end booking',
+      );
     }
   }
 
@@ -99,18 +101,22 @@ export class BookingsService {
       throw new Error('User not found');
     }
 
-    // if the user is an admin, return the booking
-    // if the user is not an admin, return the booking only if it belongs to the user
-    if (user.isAdmin) {
-      return await this.bookingRepository.findOne({
-        where: { id: bookingId },
-        relations: ['spot', 'user'],
-      });
+    const booking = await this.bookingRepository.findOne({
+      where: { id: bookingId },
+      relations: ['spot', 'user'],
+    });
+
+    if (!booking) {
+      throw new EntityNotFoundError('Booking', bookingId);
+    }
+
+    // Check if the user is authorized to view the booking
+    if (user.isAdmin || booking.user.id === userId) {
+      return booking;
     } else {
-      return await this.bookingRepository.findOne({
-        where: { id: bookingId, user },
-        relations: ['spot', 'user'],
-      });
+      throw new UnauthorizedError(
+        'User does not have permission to view booking',
+      );
     }
   }
 
@@ -126,18 +132,20 @@ export class BookingsService {
 
     // Check if the booking exists
     if (!booking) {
-      throw new Error('Booking not found');
+      throw new EntityNotFoundError('Booking', bookingId);
     }
 
     if (!user) {
-      throw new Error('User not found');
+      throw new EntityNotFoundError('User', userId);
     }
 
     // Check if the user is authorized to end the booking
     if (booking.user.id === userId || user.isAdmin) {
       return await this.bookingRepository.remove(booking);
     } else {
-      throw new Error('User not authorized');
+      throw new UnauthorizedError(
+        'User does not have permission to delete booking',
+      );
     }
   }
 }

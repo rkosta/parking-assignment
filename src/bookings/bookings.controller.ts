@@ -12,6 +12,7 @@ import { BookingDto } from './dtos/booking.dto';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/users/user.entity';
 import { Serialize } from 'src/interceptors/serialize-interceptor';
+import { ErrorInterceptor } from 'src/interceptors/error-interceptor';
 
 @Controller('bookings')
 export class BookingsController {
@@ -45,5 +46,13 @@ export class BookingsController {
     @Query('spot', ParseIntPipe) spotId: number,
   ) {
     return await this.bookingsService.createBooking(spotId, currentUser.id);
+  }
+
+  @Post(':id/end')
+  async endBooking(
+    @CurrentUser() currentUser: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return await this.bookingsService.endBooking(id, currentUser.id);
   }
 }
