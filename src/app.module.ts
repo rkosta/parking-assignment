@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SpotsModule } from './spots/spots.module';
@@ -7,6 +7,8 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Spot } from './spots/spot.entity';
 import { User } from './users/user.entity';
+import { Booking } from './bookings/booking.entity';
+import { CurrentUserMiddleware } from './middleware/current-user.middleware';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { User } from './users/user.entity';
       port: 5432,
       username: 'deskbird',
       password: 'pass@word1',
-      entities: [Spot, User],
+      entities: [Spot, User, Booking],
       synchronize: true,
     }),
     SpotsModule,
@@ -27,4 +29,8 @@ import { User } from './users/user.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CurrentUserMiddleware).forRoutes('*');
+  }
+}

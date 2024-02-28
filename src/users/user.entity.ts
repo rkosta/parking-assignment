@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Booking } from 'src/bookings/booking.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 /* The class `User` defines properties for a user entity with fields for id, first name, last name,
@@ -69,4 +70,15 @@ export class User {
   value), and `unique: true`, which enforces uniqueness constraint on the `token` values in the
   database table. */
   token: string;
+
+  /* The `@OneToMany` decorator above the `bookings` property specifies the relationship between the
+  `User` entity and the `Booking` entity. This relationship indicates that a user can have multiple
+  bookings associated with them. The `@OneToMany` decorator takes two arguments: a function that
+  returns the related entity class (`() => Booking`) and a function that returns the related property
+  in the related entity class (`(booking) => booking.user`). */
+  @OneToMany(() => Booking, (booking) => booking.user)
+  /* The line `bookings: Booking[];` in the `User` class is defining a property called `bookings` with
+  a type annotation of `Booking[]`. This property represents an array of booking entities associated
+  with a user entity in the database table. */
+  bookings: Booking[];
 }

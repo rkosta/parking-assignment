@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -56,45 +57,47 @@ export class SpotsController {
   }
 
   @Get(':id')
+
   /**
-   * This function retrieves a spot using the ID provided in the GetSpotDto parameter.
-   * @param {GetSpotDto} idParam - The `idParam` parameter is of type `GetSpotDto`, which likely
-   * contains the `id` property used to retrieve a specific spot from the `spotsService` by calling the
-   * `findOne` method with the `idParam.id` as the argument.
-   * @returns The `findOne` method from the `spotsService` is being called with the `id` property of
-   * the `idParam` object as the argument, and the result of this method call is being returned.
+   * This TypeScript function retrieves a spot by its ID and returns a DTO representation of it,
+   * handling the case where the spot is not found.
+   * @param {number} id - The `id` parameter is a number that is passed to the `getSpot` method as a
+   * route parameter. It is parsed as an integer using the `ParseIntPipe` class to ensure that it is a
+   * valid integer value. This method then uses the `id` to retrieve a specific spot
+   * @returns The `getSpot` method is returning a `SpotDto` object after fetching the spot data from
+   * the `spotsService` using the provided `id`. If the spot is not found, a `NotFoundException` is
+   * thrown with a message indicating that the spot with the given id was not found. The returned
+   * `SpotDto` object is created using the `plainToClass` function with the `exclude
    */
-  async getSpot(@Param() idParam: IdSpotDto) {
-    const spot = await this.spotsService.findOne(idParam.id);
+  async getSpot(@Param('id', ParseIntPipe) id: number) {
+    const spot = await this.spotsService.findOne(id);
     if (!spot) {
-      throw new NotFoundException(`Spot with id ${idParam.id} not found`);
+      throw new NotFoundException(`Spot with id ${id} not found`);
     }
     return plainToClass(SpotDto, spot, { excludeExtraneousValues: true });
   }
 
-  /**
-   * This function updates a spot using the ID provided in the IdSpotDto parameter and the name provided
-   * in the UpdateSpotDto parameter.
-   * @param {IdSpotDto} idParam - The `idParam` parameter is of type `IdSpotDto`, which likely contains
-   * the `id` property used to identify the spot to be updated.
-   * @param {UpdateSpotDto} updateSpotDto - The `updateSpotDto` parameter is of type `UpdateSpotDto`,
-   * @returns The `updateSpot` function is returning the result of calling the `updateSpot` method of the
-   * `spotsService` with the `idParam.id` and `name` as arguments. If the spot is not found, a
-   * NotFoundException is thrown.
-   * @throws {NotFoundException} - If the spot with the provided ID is not found, a NotFoundException is
-   * thrown.
-   */
   @Patch(':id')
+  /**
+   * This TypeScript function updates a spot with the specified ID using data from the provided DTO and
+   * returns the updated spot in a specific format.
+   * @param {number} id - The `id` parameter is a number that is parsed from the request URL using the
+   * `ParseIntPipe`. It is used to identify the specific spot that needs to be updated in the database.
+   * @param {UpdateSpotDto} updateSpotDto - The `updateSpotDto` parameter in your code snippet likely
+   * represents a Data Transfer Object (DTO) used for updating a spot. It contains the data necessary
+   * to update a spot, such as the new name of the spot.
+   * @returns The code snippet is returning a SpotDto object after updating a spot with the provided id
+   * and name in the spotsService. If the spot is not found, a NotFoundException is thrown with a
+   * message indicating that the spot with the given id was not found. The returned SpotDto object is
+   * created using the plainToClass function with the spot data and excluding any extraneous values.
+   */
   async updateSpot(
-    @Param() idParam: IdSpotDto,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateSpotDto: UpdateSpotDto,
   ) {
-    const spot = await this.spotsService.updateSpot(
-      idParam.id,
-      updateSpotDto.name,
-    );
+    const spot = await this.spotsService.updateSpot(id, updateSpotDto.name);
     if (!spot) {
-      throw new NotFoundException(`Spot with id ${idParam.id} not found`);
+      throw new NotFoundException(`Spot with id ${id} not found`);
     }
     return plainToClass(SpotDto, spot, { excludeExtraneousValues: true });
   }

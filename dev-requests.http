@@ -6,11 +6,11 @@ POST http://localhost:3000/spots
 Content-Type: application/json
 
 {
-  "name": "Spot"
+  "name": "My New Spot"
 }
 
 ### GET A SPOT ###
-GET http://localhost:3000/spots/3
+GET http://localhost:3000/spots/1
 
 ### UPDATE A SPOT ###
 PATCH http://localhost:3000/spots/1
@@ -31,7 +31,7 @@ Content-Type: application/json
   "lastName": "Costa",
   "firstName": "Ricardo",
   "email": "info@teamnub.com",
-  "token": "333333",
+  "token": "444444",
   "isAdmin": true
 }
 
@@ -45,4 +45,12 @@ Content-Type: application/json
 {
   "firstName": "Ricardo Changed"
 }
+
+### GET ALL BOOKINGS ###
+GET http://localhost:3000/bookings
+token: 444444
+
+### GET A BOOKING ###
+GET http://localhost:3000/bookings/1
+token: 444444
 

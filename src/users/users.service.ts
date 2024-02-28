@@ -16,18 +16,21 @@ export class UsersService {
   ) {}
 
   /**
-   * The create function takes a CreateUserDto object and uses it to create a new user using the
-   * userRepository.
-   * @param {CreateUserDto} createUserDto - The `createUserDto` parameter is of type `CreateUserDto`,
-   * which is a Data Transfer Object (DTO) used to transfer data when creating a user. It likely
-   * contains properties such as `firstName`, `lastName`, `email`, and `isAdmin`, which are used to
-   * create a new user in the `userRepository`.
-   * @returns The `create` function is returning a Promise that resolves to a `User` object after
-   * saving the user with the provided data in the `userRepository`.
+   * The create function in TypeScript excludes the id from the user object before saving it to the
+   * repository.
+   * @param {User} user - The `create` function you provided takes a `User` object as a parameter. The
+   * function then extracts the `id` property from the `User` object and creates a new user object
+   * without the `id` property. Finally, it saves the new user object using the `userRepository` and
+   * returns
+   * @returns The `create` function is returning a Promise that resolves to a new User object after
+   * excluding the `id` property from the input `user` object, creating a new user entity in the
+   * repository with the remaining properties, and saving the new user entity in the repository.
    */
   async create(user: User): Promise<User> {
-    console.log(user);
-    return this.userRepository.save(user);
+    // make sure to exclude the id from the user object
+    const { id, ...otherProps } = user;
+    const newUser = this.userRepository.create(otherProps);
+    return this.userRepository.save(newUser);
   }
 
   /**
@@ -35,7 +38,7 @@ export class UsersService {
    * @returns An array of `User` objects is being returned.
    */
   async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return await this.userRepository.find();
   }
 
   /**
@@ -44,7 +47,7 @@ export class UsersService {
    * @returns A `User` object is being returned.
    */
   async findOneById(id: number): Promise<User | undefined> {
-    return this.userRepository.findOneBy({ id });
+    return await this.userRepository.findOneBy({ id });
   }
 
   /**

@@ -19,8 +19,7 @@ export class SpotsService {
    * saving the spot with the provided name in the `spotsRepository`.
    */
   async create(name: string): Promise<Spot> {
-    const spot = new Spot();
-    spot.name = name;
+    const spot = this.spotsRepository.create({ name });
     return this.spotsRepository.save(spot);
   }
 

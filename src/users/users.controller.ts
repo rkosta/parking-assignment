@@ -6,13 +6,14 @@ import {
   Param,
   NotFoundException,
   Patch,
+  ParseFloatPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserDto } from './dtos/user.dto';
-import { classToPlain, instanceToPlain, plainToClass } from 'class-transformer';
+import { instanceToPlain, plainToClass } from 'class-transformer';
 import { User } from './user.entity';
-import { IdUserDto } from './dtos/id-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dt';
 
 @Controller('users')
@@ -56,26 +57,25 @@ export class UsersController {
     });
   }
 
-  /**
-   * This TypeScript function retrieves a user by ID and returns a DTO representation of the user with
-   * certain values excluded.
-   * @param {IdUserDto} idParam - The `idParam` parameter in the `getUser` function is of type
-   * `GetUserDto`, which likely contains a single property `id`. This parameter is used to fetch a user
-   * from the database using the `id` provided in the `idParam`. If the user is not found, a
-   * @returns An instance of the `UserDto` class is being returned after converting the `user` object
-   * to a plain object using `instanceToPlain` and then transforming it to an instance of `UserDto`
-   * with the specified options.
-   */
   @Get(':id')
-  async getUser(@Param() idParam: IdUserDto) {
-    const user = await this.userService.findOneById(idParam.id);
+  /**
+   * The `getUser` function retrieves a user by ID from the database and throws a NotFoundException if
+   * the user does not exist, returning a DTO representation of the user if found.
+   * @param {number} id - The `id` parameter in the `getUser` function is a number type parameter that
+   * represents the unique identifier of a user. This parameter is passed to the function to retrieve a
+   * specific user from the database based on this identifier. The `ParseIntPipe` is used to ensure
+   * that the `id`
+   * @returns The `getUser` function is returning a `UserDto` object that is created using the
+   * `plainToClass` function. This `UserDto` object is constructed based on the data retrieved from the
+   * database for the user with the specified ID. The `excludeExtraneousValues: true` option ensures
+   * that only the properties defined in the `UserDto` class are included in the returned object,
+   */
+  async getUser(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.userService.findOneById(id);
 
-    /* The `if (!user) {` statement in the `getUser` function is checking if the `user` object
-    retrieved from the database is falsy, which typically means that no user was found with the
-    provided ID. If the `user` object is falsy (i.e., `null`, `undefined`, `0`, `false`, etc.), it
-    means that the user with the specified ID does not exist in the database. */
+    // If the user is not found, throw a NotFoundException
     if (!user) {
-      throw new NotFoundException(`User with id ${idParam.id} not found`);
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
     return plainToClass(UserDto, instanceToPlain(user), {
@@ -83,35 +83,33 @@ export class UsersController {
     });
   }
 
-  /**
-   * This TypeScript function updates a user by ID and returns a DTO representation of the updated user
-   * with certain values excluded.
-   * @param {IdUserDto} idParam - The `idParam` parameter in the `updateUser` function is of type
-   * `IdUserDto`, which likely contains a single property `id`. This parameter is used to identify the
-   * user to be updated.
-   * @param {UpdateUserDto} updateUserDto - The `updateUserDto` parameter in the `updateUser` function
-   * is of type `UpdateUserDto`, which likely contains properties representing the data to be updated
-   * for the user.
-   * @returns An instance of the `UserDto` class is being returned after converting the `user` object
-   * to a plain object using `instanceToPlain` and then transforming it to an instance of `UserDto`
-   * with the specified options.
-   */
   @Patch(':id')
+  /**
+   * The `updateUser` function updates a user in the database and throws a `NotFoundException` if the
+   * user with the specified ID is not found.
+   * @param {number} id - The `id` parameter in the `updateUser` function is a number that represents
+   * the unique identifier of the user you want to update. This parameter is obtained from the route
+   * URL as a request parameter. It is parsed using `ParseIntPipe` to ensure that it is converted to a
+   * valid integer
+   * @param {UpdateUserDto} updateUserDto - The `updateUserDto` parameter in the `updateUser` function
+   * is of type `UpdateUserDto`. This parameter likely contains the data that needs to be updated for
+   * the user with the specified ID. It could include fields such as name, email, or any other user
+   * information that can be modified
+   * @returns The `updateUser` method in the code snippet is returning a `UserDto` object after
+   * updating the user information in the database. The `UserDto` object is created using the
+   * `plainToClass` function from the class-transformer library, which transforms the retrieved user
+   * object into a plain object of type `UserDto`. The `excludeExtraneousValues: true` option ensures
+   * that only
+   */
   async updateUser(
-    @Param() idParam: IdUserDto,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const user = await this.userService.updateUser(idParam.id, updateUserDto);
+    const user = await this.userService.updateUser(id, updateUserDto);
 
-    /* The `if (!user) {` statement in the `getUser` function is checking if the `user` object retrieved
-   from the database is falsy, which typically means that no user was found with the provided ID. If
-   the `user` object is falsy (i.e., `null`, `undefined`, `0`, `false`, etc.), it means that the
-   user with the specified ID does not exist in the database. In this case, the code throws a
-   `NotFoundException` with a message indicating that the user with the specified ID was not found.
-   This helps in handling the scenario where a user lookup by ID does not return any matching user
-   data. */
+    // If the user is not found, throw a NotFoundException
     if (!user) {
-      throw new NotFoundException(`User with id ${idParam.id} not found`);
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
     return plainToClass(UserDto, instanceToPlain(user), {
