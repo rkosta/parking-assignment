@@ -6,3 +6,6 @@ token: 444444
 GET http://localhost:3000/bookings/1
 token: 44444
 
+### CREATE A BOOKING ###
+POST http://localhost:3000/bookings/create?spot=1
+token: 111111
