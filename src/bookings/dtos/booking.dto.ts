@@ -1,13 +1,14 @@
-import { Expose } from 'class-transformer';
-import { Spot } from 'src/spots/spot.entity';
-import { User } from 'src/users/user.entity';
+import { Expose, Transform, Type } from 'class-transformer';
+import { SpotDto } from 'src/spots/dtos/spot-dto';
+import { UserDto } from 'src/users/dtos/user.dto';
 
 export class BookingDto {
   @Expose()
   id: number;
 
   @Expose()
-  user: User;
+  @Transform(({ obj }) => obj.user.id)
+  userId: number;
 
   @Expose()
   start: Date;
@@ -16,7 +17,8 @@ export class BookingDto {
   end: Date;
 
   @Expose()
-  spot: Spot;
+  @Type(() => SpotDto)
+  spot: SpotDto;
 
   @Expose()
   createdAt: Date;

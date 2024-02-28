@@ -37,7 +37,8 @@ export class BookingsService {
       user,
     });
     // Save the booking
-    return await this.bookingRepository.save(newBooking);
+    const result = await this.bookingRepository.save(newBooking);
+    return result;
   }
 
   async endBooking(bookingId: number, userId: number) {

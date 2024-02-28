@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: pg-container
+    environment:
+      POSTGRES_USER: deskbird
+      POSTGRES_PASSWORD: pass@word1
+      POSTGRES_DB: parking
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: rkosta@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: pass@word1
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:

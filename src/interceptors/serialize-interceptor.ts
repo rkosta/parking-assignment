@@ -13,13 +13,14 @@ export class SerializeInterceptor implements NestInterceptor {
   constructor(private readonly dto: any) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('Before...');
     return next.handle().pipe(
       map((data: any) => {
-        console.log('After...', data);
-        return plainToInstance(this.dto, data, {
+        console.log('Data:', data);
+        const result = plainToInstance(this.dto, data, {
           excludeExtraneousValues: true,
         });
+        console.log('Result:', result);
+        return result;
       }),
     );
   }
