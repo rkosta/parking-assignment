@@ -1,0 +1,25 @@
+### GET ALL SPOTS ###
+GET http://localhost:3000/spots
+token: 123456
+
+### CREATE A SPOT ###
+POST http://localhost:3000/spots
+Content-Type: application/json
+token: 444444
+
+{
+  "name": "One more Spot"
+}
+
+### GET A SPOT ###
+GET http://localhost:3000/spots/1
+token: 123456
+
+### UPDATE A SPOT ###
+PATCH http://localhost:3000/spots/1
+Content-Type: application/json
+token: 444444
+
+{
+  "name": "Spot Changed"
+}

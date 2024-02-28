@@ -1,0 +1,8 @@
+### GET ALL BOOKINGS ###
+GET http://localhost:3000/bookings
+token: 444444
+
+### GET A BOOKING ###
+GET http://localhost:3000/bookings/1
+token: 44444
+
