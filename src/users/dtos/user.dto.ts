@@ -43,7 +43,7 @@ export class UserDto {
   structure. The `@Exclude()` decorator above the property indicates that this property should be
   excluded when serializing the object, meaning it will not be part of the output when converting the
   object to a JSON representation. */
-  /* CONSIDERATION: I decided to remove from the serialization for security measures. */
-  @Expose()
+  // CONSIDERATION: I decided to remove from the serialization for security measures.
+  @Exclude()
   token: string;
 }
