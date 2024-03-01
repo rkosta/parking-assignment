@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 /**
@@ -7,6 +8,12 @@ import { IsNotEmpty, IsString } from 'class-validator';
  * It is used to update the name of a spot in the `spotsService`.
  */
 export class UpdateSpotDto {
+  @ApiProperty({
+    description: 'The name of the spot',
+    example: 'Spot 1',
+    required: true,
+    type: 'string',
+  })
   @IsString()
   @IsNotEmpty()
   /* The line `name: string;` within the `UpdateSpotDto` class in TypeScript is defining a property

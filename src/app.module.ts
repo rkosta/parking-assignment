@@ -28,6 +28,6 @@ import { TypeOrmConfigService } from './type-orm-config.service';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CurrentUserMiddleware).forRoutes('*');
+    consumer.apply(CurrentUserMiddleware).exclude('api*').forRoutes('*');
   }
 }

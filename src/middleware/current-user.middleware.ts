@@ -10,7 +10,7 @@ export class CurrentUserMiddleware implements NestMiddleware {
   constructor(private readonly userService: UsersService) {}
 
   async use(req: any, res: any, next: () => void) {
-    const token = req.headers['token'];
+    const token = req.headers['Authorization'];
 
     // If the token is not found, throw an UnauthorizedException
     // CONSIDERATION: for simplicity i'm assunming that all requests need to be authenticated
@@ -20,11 +20,13 @@ export class CurrentUserMiddleware implements NestMiddleware {
     // to the next middleware. And I could use Guards to protect the routes
     // that need to be authenticated
     if (!token) {
+      console.log('no token');
       throw new UnauthorizedException();
     } else {
       const user = await this.userService.findOneByToken(token);
       // If the user is not found, throw an UnauthorizedException
       if (!user) {
+        console.log(`user not found for token ${token}`);
         throw new UnauthorizedException();
       }
       req.currentUser = user;

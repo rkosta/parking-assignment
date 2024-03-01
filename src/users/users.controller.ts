@@ -17,13 +17,24 @@ import { User } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dt';
 import { AdminGuard } from 'src/guards/admin-guard';
 import { Serialize } from 'src/interceptors/serialize-interceptor';
+import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
+@ApiHeader({
+  name: 'Authorization',
+  description: 'The token we need for authorization',
+})
 @Controller('users')
 /* The UsersController class in TypeScript defines methods for creating, retrieving, and transforming
 user data using a UsersService. */
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
+  @ApiResponse({
+    status: 201,
+    description: 'Create a new user',
+    type: UserDto,
+  })
   @UseGuards(AdminGuard)
   @Post()
   @Serialize(UserDto)
@@ -32,12 +43,23 @@ export class UsersController {
     return await this.userService.create(user);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieve all users',
+    type: UserDto,
+    isArray: true,
+  })
   @Get()
   @Serialize(UserDto)
   async getAllUsers() {
     return await this.userService.findAll();
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieve a user by id',
+    type: UserDto,
+  })
   @Get(':id')
   @Serialize(UserDto)
   async getUser(@Param('id', ParseIntPipe) id: number) {
@@ -51,6 +73,11 @@ export class UsersController {
     return user;
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Update a user by id',
+    type: UserDto,
+  })
   @Serialize(UserDto)
   @UseGuards(AdminGuard)
   @Patch(':id')

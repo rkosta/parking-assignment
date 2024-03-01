@@ -12,18 +12,34 @@ import { BookingDto } from './dtos/booking.dto';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/users/user.entity';
 import { Serialize } from 'src/interceptors/serialize-interceptor';
-import { ErrorInterceptor } from 'src/interceptors/error-interceptor';
+import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('bookings')
+@ApiHeader({
+  name: 'Authorization',
+  description: 'The token we need for authorization',
+})
 @Controller('bookings')
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieve all bookings',
+    type: BookingDto,
+    isArray: true,
+  })
   @Serialize(BookingDto)
   @Get()
   async getBookings(@CurrentUser() currentUser: User) {
     return await this.bookingsService.findAll(currentUser.id);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieve a booking by id',
+    type: BookingDto,
+  })
   @Get(':id')
   @Serialize(BookingDto)
   async getBooking(
@@ -39,6 +55,11 @@ export class BookingsController {
     return booking;
   }
 
+  @ApiResponse({
+    status: 201,
+    description: 'Create a new booking',
+    type: BookingDto,
+  })
   @Post('/create')
   @Serialize(BookingDto)
   async createBooking(
@@ -48,6 +69,11 @@ export class BookingsController {
     return await this.bookingsService.createBooking(spotId, currentUser.id);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'End a booking',
+    type: BookingDto,
+  })
   @Post(':id/end')
   async endBooking(
     @CurrentUser() currentUser: User,

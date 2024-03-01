@@ -1,11 +1,11 @@
 ### GET ALL USERS ###
 GET http://localhost:3000/users
-token: 123456
+Authorization: 123456
 
 ### CREATE A USER ###
 POST http://localhost:3000/users
 Content-Type: application/json
-token: 444444
+Authorization: 444444
 
 {
   "lastName": "Costa",
@@ -17,12 +17,12 @@ token: 444444
 
 ### GET A USER ###
 GET http://localhost:3000/users/5
-token: 123456
+Authorization: 123456
 
 ### UPDATE A USER ###
 PATCH http://localhost:3000/users/5
 Content-Type: application/json
-token: 444444
+Authorization: 444444
 
 {
   "firstName": "Ricardo Changed"
