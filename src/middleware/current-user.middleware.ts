@@ -10,8 +10,8 @@ export class CurrentUserMiddleware implements NestMiddleware {
   constructor(private readonly userService: UsersService) {}
 
   async use(req: any, res: any, next: () => void) {
-    const token = req.headers['Authorization'];
-
+    const token = req.headers['token'];
+    console.log('token', token);
     // If the token is not found, throw an UnauthorizedException
     // CONSIDERATION: for simplicity i'm assunming that all requests need to be authenticated
     // so if the token is not found, i'm throwing an UnauthorizedException

@@ -1,16 +1,16 @@
 ### GET ALL BOOKINGS ###
 GET http://localhost:3000/bookings
-Authorization: 444444
+token: 444444
 
 ### GET A BOOKING ###
 GET http://localhost:3000/bookings/123
-Authorization: 222222
+token: 222222
 
 ### CREATE A BOOKING ###
 POST http://localhost:3000/bookings/create?spot=1
-Authorization: 222222
+token: 222222
 
 ### END A BOOKING ###
 POST http://localhost:3000/bookings/15/end
-Authorization: 444444
+token: 444444
 
