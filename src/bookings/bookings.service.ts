@@ -6,6 +6,8 @@ import { Spot } from 'src/spots/spot.entity';
 import { User } from 'src/users/user.entity';
 import { UnauthorizedError } from 'src/common/errors/unauthorized.error';
 import { Role } from 'src/permissions/role.enum';
+import { UsersService } from 'src/users/users.service';
+import { Permission } from 'src/permissions/permission.enum';
 
 @Injectable()
 export class BookingsService {
@@ -14,15 +16,14 @@ export class BookingsService {
     private bookingRepository: Repository<Booking>,
     @InjectRepository(Spot)
     private spotRepository: Repository<Spot>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private userService: UsersService,
   ) {}
 
   async createBooking(spotId: number, userId: number) {
     // Find the spot and user
     const [spot, user] = await Promise.all([
       this.spotRepository.findOneBy({ id: spotId }),
-      this.userRepository.findOneBy({ id: userId }),
+      this.userService.findOneById(userId),
     ]);
     if (!spot) {
       throw new EntityNotFoundError('Spot', spotId);
@@ -45,20 +46,14 @@ export class BookingsService {
 
   async endBooking(bookingId: number, userId: number) {
     // Find the booking and user
-    const [booking, user] = await Promise.all([
-      this.bookingRepository.findOne({
-        where: { id: bookingId },
-        relations: ['spot', 'user'],
-      }),
-      this.userRepository.findOneBy({ id: userId }),
-    ]);
+    const booking = await this.bookingRepository.findOne({
+      where: { id: bookingId },
+      relations: ['spot', 'user'],
+    });
+
     // Check if the booking exists
     if (!booking) {
       throw new EntityNotFoundError('Booking', bookingId);
-    }
-
-    if (!user) {
-      throw new EntityNotFoundError('User', userId);
     }
 
     // check if the booking already ended
@@ -66,8 +61,14 @@ export class BookingsService {
       throw new Error('Booking already ended');
     }
 
+    const userPermissions = await this.userService.getUserPermissions(userId);
+
     // Check if the user is authorized to end the booking
-    if (booking.user.id === userId || user.role === Role.ADMIN) {
+    if (
+      userPermissions.includes(Permission.MANAGE_BOOKINGS) ||
+      (userPermissions.includes(Permission.MANAGE_OWN_BOOKINGS) &&
+        booking.user.id === userId)
+    ) {
       // Update the booking
       booking.updatedAt = new Date();
       booking.end = new Date();
@@ -80,24 +81,30 @@ export class BookingsService {
   }
 
   async findAll(userId: number): Promise<Booking[]> {
-    const user = await this.userRepository.findOneBy({ id: userId });
+    const user = await this.userService.findOneById(userId);
     if (!user) {
       throw new EntityNotFoundError('User', userId);
     }
 
-    if (user.role === Role.ADMIN) {
+    const userPermissions = await this.userService.getUserPermissions(userId);
+
+    if (userPermissions.includes(Permission.MANAGE_BOOKINGS)) {
       return await this.bookingRepository.find({ relations: ['spot', 'user'] });
-    } else {
+    } else if (userPermissions.includes(Permission.MANAGE_OWN_BOOKINGS)) {
       return await this.bookingRepository.find({
         where: { user },
         relations: ['spot', 'user'],
       });
+    } else {
+      throw new UnauthorizedError(
+        'User does not have permission to view bookings',
+      );
     }
   }
 
   async findOne(bookingId: number, userId: number) {
     // Find the user
-    const user = await this.userRepository.findOneBy({ id: userId });
+    const user = await this.userService.findOneById(userId);
     if (!user) {
       throw new EntityNotFoundError('User', userId);
     }
@@ -111,8 +118,14 @@ export class BookingsService {
       throw new EntityNotFoundError('Booking', bookingId);
     }
 
+    const userPermissions = await this.userService.getUserPermissions(userId);
+
     // Check if the user is authorized to view the booking
-    if (user.role === Role.ADMIN || booking.user.id === userId) {
+    if (
+      userPermissions.includes(Permission.MANAGE_BOOKINGS) ||
+      (userPermissions.includes(Permission.MANAGE_OWN_BOOKINGS) &&
+        booking.user.id === userId)
+    ) {
       return booking;
     } else {
       throw new UnauthorizedError(
@@ -122,26 +135,25 @@ export class BookingsService {
   }
 
   async remove(bookingId: number, userId: number) {
-    // Find the booking and user
-    const [booking, user] = await Promise.all([
-      this.bookingRepository.findOne({
-        where: { id: bookingId },
-        relations: ['spot', 'user'],
-      }),
-      this.userRepository.findOneBy({ id: userId }),
-    ]);
+    // Find the booking
+    const booking = await this.bookingRepository.findOne({
+      where: { id: bookingId },
+      relations: ['spot', 'user'],
+    });
 
     // Check if the booking exists
     if (!booking) {
       throw new EntityNotFoundError('Booking', bookingId);
     }
 
-    if (!user) {
-      throw new EntityNotFoundError('User', userId);
-    }
+    const userPermissions = await this.userService.getUserPermissions(userId);
 
     // Check if the user is authorized to end the booking
-    if (booking.user.id === userId || user.role === Role.ADMIN) {
+    if (
+      userPermissions.includes(Permission.MANAGE_BOOKINGS) ||
+      (userPermissions.includes(Permission.MANAGE_OWN_BOOKINGS) &&
+        booking.user.id === userId)
+    ) {
       return await this.bookingRepository.remove(booking);
     } else {
       throw new UnauthorizedError(

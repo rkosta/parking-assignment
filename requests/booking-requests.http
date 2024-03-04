@@ -1,9 +1,9 @@
 ### GET ALL BOOKINGS ###
 GET http://localhost:3000/bookings
-token: 444444
+token: 222222
 
 ### GET A BOOKING ###
-GET http://localhost:3000/bookings/123
+GET http://localhost:3000/bookings/1
 token: 222222
 
 ### CREATE A BOOKING ###

@@ -4,6 +4,8 @@ import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { Role } from 'src/permissions/role.enum';
+import { Permission } from 'src/permissions/permission.enum';
+import { RolePermission } from 'src/permissions/role-permision.entity';
 
 /**
  * The UsersService class is a service that interacts with a repository to create and retrieve User
@@ -14,6 +16,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(RolePermission)
+    private rolePermissionRepository: Repository<RolePermission>,
   ) {}
 
   /**
@@ -99,5 +103,30 @@ export class UsersService {
       user.role = role;
       return this.userRepository.save(user);
     }
+  }
+
+  /** The `userHasPermission` function checks if a user has a specific permission. */
+  async userHasPermission(
+    userId: number,
+    permission: Permission,
+  ): Promise<boolean> {
+    const permissionCount = await this.rolePermissionRepository
+      .createQueryBuilder('rp')
+      .innerJoin(User, 'u', 'u.role::text = rp.role::text')
+      .where('u.id = :userId', { userId })
+      .getCount();
+
+    return permissionCount > 0;
+  }
+
+  /** The `getUserPermissions` function retrieves the permissions associated with a user's role. */
+  async getUserPermissions(userId: number): Promise<Permission[]> {
+    const permissions = await this.rolePermissionRepository
+      .createQueryBuilder('rp')
+      .innerJoin(User, 'u', 'u.role::text = rp.role::text')
+      .where('u.id = :userId', { userId })
+      .getMany();
+
+    return permissions.map((rp) => rp.permission);
   }
 }
