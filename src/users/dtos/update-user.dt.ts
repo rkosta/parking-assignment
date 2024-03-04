@@ -31,12 +31,4 @@ export class UpdateUserDto {
   `token` field is not required and can be omitted. */
   @IsOptional()
   token: string;
-
-  /* The line `role: Role;` in the `UpdateUserDto` class is defining a property named `role` of type
-  `Role`. This property is optional for updating a user as indicated by the `@IsOptional()` decorator
-  above it. This means that when updating a user object using this DTO (Data Transfer Object), the
-  `role` field is not required and can be omitted. */
-  @IsOptional()
-  @IsEnum(Role)
-  role: Role;
 }

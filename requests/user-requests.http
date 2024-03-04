@@ -25,5 +25,5 @@ Content-Type: application/json
 token: 444444
 
 {
-  "role": "user"
+  "firstName": "My User"
 }
