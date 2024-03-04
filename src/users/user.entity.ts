@@ -76,6 +76,9 @@ export class User {
   which specifies that the `role` field can only have values from the `Role` enum, and `default:
   Role.USER`, which means that the `role` field will have a default value of `Role.USER` if not
   explicitly provided. */
+  // CONSIDERATION: In real life production systems, a user should have one or more roles, not just one.
+  // and the roles should also be stored in a separate table and managed by an admin user. The roles
+  // shouldn't be hardcoded in the code with an enum.
   @Column('enum', { enum: Role, default: Role.USER })
   role: Role;
 }
