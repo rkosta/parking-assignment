@@ -1,4 +1,5 @@
-import { IsOptional } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
+import { Role } from 'src/permissions/role.enum';
 
 /* The `UpdateUserDto` class defines properties for updating a user with optional fields for first
 name, last name, email, token, and isAdmin. */
@@ -31,10 +32,11 @@ export class UpdateUserDto {
   @IsOptional()
   token: string;
 
-  /* The line `isAdmin: boolean;` in the `UpdateUserDto` class is defining a property named `isAdmin` of
-  type `boolean`. This property is optional for updating a user as indicated by the `@IsOptional()`
-  decorator above it. This means that when updating a user object using this DTO (Data Transfer Object),
-  the `isAdmin` field is not required and can be omitted. */
+  /* The line `role: Role;` in the `UpdateUserDto` class is defining a property named `role` of type
+  `Role`. This property is optional for updating a user as indicated by the `@IsOptional()` decorator
+  above it. This means that when updating a user object using this DTO (Data Transfer Object), the
+  `role` field is not required and can be omitted. */
   @IsOptional()
-  isAdmin: boolean;
+  @IsEnum(Role)
+  role: Role;
 }

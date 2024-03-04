@@ -1,4 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
+import { Role } from 'src/permissions/role.enum';
 
 /* The UserDto class defines properties for a user's first name, last name, email, and admin status,
 with token excluded. */
@@ -32,11 +33,12 @@ export class UserDto {
   @Expose()
   email: string;
 
-  /* The line `isAdmin: boolean;` in the `UserDto` class is defining a property named `isAdmin` with a
-  type of `boolean`. This property represents the admin status of a user in the data transfer object
-  (DTO) structure. */
+  /* The line `role: Role;` in the `UserDto` class is defining a property named `role` with a type of
+  `Role`. This property represents the role of a user in the data transfer object (DTO) structure. The
+  `@Expose()` decorator above the property indicates that this property should be included when
+  serializing the object. */
   @Expose()
-  isAdmin: boolean;
+  role: Role;
 
   /* The line `token: string;` in the `UserDto` class is defining a property named `token` with a type
   of `string`. This property represents the token of a user in the data transfer object (DTO)

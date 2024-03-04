@@ -1,4 +1,5 @@
-import { IsNotEmpty, MinLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, MinLength } from 'class-validator';
+import { Role } from 'src/permissions/role.enum';
 
 /* The class `CreateUserDto` defines properties for creating a user with required fields for first
 name, last name, email, and token, along with an optional isAdmin flag. */
@@ -27,8 +28,14 @@ export class CreateUserDto {
   decorator above it. This means that when creating a new user object using this DTO (Data Transfer
   Object), the `token` field must be provided and cannot be empty. */
   token: string;
-  /* The line `isAdmin: boolean;` in the `CreateUserDto` class is defining a property named `isAdmin`
-  of type `boolean`. This property is not marked with any validation decorators like
-  `@IsNotEmpty()`, which means it is optional when creating a user object using this DTO. */
-  isAdmin: boolean;
+
+  /* In the `CreateUserDto` class, the line `role: Role;` is defining a property named `role` of type
+  `Role`. This property is required for creating a user, as indicated by the `@IsNotEmpty()` decorator
+  above it. This means that when creating a new user object using this DTO (Data Transfer Object), the
+  `role` field must be provided and cannot be empty. The `@IsEnum(Role)` decorator above the `role`
+  property specifies that the value of the `role` field must be one of the allowed values defined in
+  the `Role` enum. */
+  @IsNotEmpty()
+  @IsEnum(Role)
+  role: Role;
 }

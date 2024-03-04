@@ -11,8 +11,8 @@ token: 444444
   "lastName": "Costa",
   "firstName": "Ricardo",
   "email": "info@teamnub.com",
-  "token": "777777",
-  "isAdmin": true
+  "token": "999999",
+  "role": "admin"
 }
 
 ### GET A USER ###
@@ -20,10 +20,10 @@ GET http://localhost:3000/users/5
 token: 123456
 
 ### UPDATE A USER ###
-PATCH http://localhost:3000/users/5
+PATCH http://localhost:3000/users/14
 Content-Type: application/json
 token: 444444
 
 {
-  "firstName": "Ricardo Changed"
+  "role": "user"
 }
