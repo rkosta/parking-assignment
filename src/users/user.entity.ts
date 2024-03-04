@@ -1,4 +1,5 @@
 import { Booking } from 'src/bookings/booking.entity';
+import { Role } from 'src/permissions/role.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -46,18 +47,6 @@ export class User {
   value). */
   email: string;
 
-  /* The line `isAdmin: boolean;` in the `User` class is defining a property called `isAdmin` with a 
-  type annotation of `boolean`. This property represents the role of a user entity in the database
-  table. The `@Column` decorator above the `isAdmin` property specifies that this field corresponds
-  to a column in the database table and provides additional configuration options such as
-  `nullable: false`, which means that the `isAdmin` field cannot be null (i.e., it must have a value),
-  and `default: false`, which means that the `isAdmin` field will have a default value of `false` if
-  not explicitly provided. */
-  @Column({
-    nullable: false,
-  })
-  isAdmin: boolean;
-
   @Column({
     nullable: false,
     unique: true,
@@ -81,4 +70,12 @@ export class User {
   a type annotation of `Booking[]`. This property represents an array of booking entities associated
   with a user entity in the database table. */
   bookings: Booking[];
+
+  /* The `@Column` decorator above the `role` property specifies that this field corresponds to a
+  column in the database table and provides additional configuration options such as `enum: Role`,
+  which specifies that the `role` field can only have values from the `Role` enum, and `default:
+  Role.USER`, which means that the `role` field will have a default value of `Role.USER` if not
+  explicitly provided. */
+  @Column('enum', { enum: Role, default: Role.USER })
+  role: Role;
 }

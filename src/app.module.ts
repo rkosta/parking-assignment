@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CurrentUserMiddleware } from './middleware/current-user.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmConfigService } from './type-orm-config.service';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TypeOrmConfigService } from './type-orm-config.service';
     SpotsModule,
     BookingsModule,
     UsersModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

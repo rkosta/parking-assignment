@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Spot } from 'src/spots/spot.entity';
 import { User } from 'src/users/user.entity';
 import { UnauthorizedError } from 'src/common/errors/unauthorized.error';
+import { Role } from 'src/permissions/role.enum';
 
 @Injectable()
 export class BookingsService {
@@ -66,7 +67,7 @@ export class BookingsService {
     }
 
     // Check if the user is authorized to end the booking
-    if (booking.user.id === userId || user.isAdmin) {
+    if (booking.user.id === userId || user.role === Role.ADMIN) {
       // Update the booking
       booking.updatedAt = new Date();
       booking.end = new Date();
@@ -84,7 +85,7 @@ export class BookingsService {
       throw new Error('User not found');
     }
 
-    if (user.isAdmin) {
+    if (user.role === Role.ADMIN) {
       return await this.bookingRepository.find({ relations: ['spot', 'user'] });
     } else {
       return await this.bookingRepository.find({
@@ -111,7 +112,7 @@ export class BookingsService {
     }
 
     // Check if the user is authorized to view the booking
-    if (user.isAdmin || booking.user.id === userId) {
+    if (user.role === Role.ADMIN || booking.user.id === userId) {
       return booking;
     } else {
       throw new UnauthorizedError(
@@ -140,7 +141,7 @@ export class BookingsService {
     }
 
     // Check if the user is authorized to end the booking
-    if (booking.user.id === userId || user.isAdmin) {
+    if (booking.user.id === userId || user.role === Role.ADMIN) {
       return await this.bookingRepository.remove(booking);
     } else {
       throw new UnauthorizedError(
