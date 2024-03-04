@@ -8,6 +8,8 @@ import {
   Patch,
   ParseIntPipe,
   UseGuards,
+  ParseEnumPipe,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -18,6 +20,7 @@ import { UpdateUserDto } from './dtos/update-user.dt';
 import { AdminGuard } from 'src/guards/admin-guard';
 import { Serialize } from 'src/interceptors/serialize-interceptor';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Role } from 'src/permissions/role.enum';
 
 @ApiTags('users')
 @ApiHeader({
@@ -93,5 +96,19 @@ export class UsersController {
     }
 
     return user;
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Assign a role to a user',
+    type: UserDto,
+  })
+  @Post(':id/assign-role')
+  @UseGuards(AdminGuard)
+  async assignRoleToUser(
+    @Param('id', ParseIntPipe) userId: number,
+    @Query('role', new ParseEnumPipe(Role)) role: Role,
+  ): Promise<User> {
+    return await this.userService.assignRoleToUser(userId, role);
   }
 }

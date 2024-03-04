@@ -25,11 +25,11 @@ export class BookingsService {
       this.userRepository.findOneBy({ id: userId }),
     ]);
     if (!spot) {
-      throw new Error('Spot not found');
+      throw new EntityNotFoundError('Spot', spotId);
     }
 
     if (!user) {
-      throw new Error('User not found');
+      throw new EntityNotFoundError('User', userId);
     }
 
     // Create a new booking
@@ -54,11 +54,11 @@ export class BookingsService {
     ]);
     // Check if the booking exists
     if (!booking) {
-      throw new Error('Booking not found');
+      throw new EntityNotFoundError('Booking', bookingId);
     }
 
     if (!user) {
-      throw new Error('User not found');
+      throw new EntityNotFoundError('User', userId);
     }
 
     // check if the booking already ended
@@ -82,7 +82,7 @@ export class BookingsService {
   async findAll(userId: number): Promise<Booking[]> {
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
-      throw new Error('User not found');
+      throw new EntityNotFoundError('User', userId);
     }
 
     if (user.role === Role.ADMIN) {
@@ -99,7 +99,7 @@ export class BookingsService {
     // Find the user
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
-      throw new Error('User not found');
+      throw new EntityNotFoundError('User', userId);
     }
 
     const booking = await this.bookingRepository.findOne({

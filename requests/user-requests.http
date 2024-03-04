@@ -27,3 +27,8 @@ token: 444444
 {
   "firstName": "My User"
 }
+
+### ASSIGN A ROLE TO A USER ###
+POST http://localhost:3000/users/14/assign-role?role=admin
+token: 444444
+

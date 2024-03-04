@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { Role } from 'src/permissions/role.enum';
 
 /**
  * The UsersService class is a service that interacts with a repository to create and retrieve User
@@ -72,5 +73,31 @@ export class UsersService {
       return null;
     }
     return this.userRepository.save({ ...userToUpdate, ...user });
+  }
+
+  /**
+   * The function `assignRoleToUser` assigns a role to a user after checking if the user exists and if
+   * the user already has the role.
+   * @param {number} userId - The `userId` parameter is a number that represents the unique identifier
+   * of the user to whom you want to assign a role.
+   * @param {Role} role - The `role` parameter in the `assignRoleToUser` function represents the role
+   * that you want to assign to a user. It is of type `Role`, which typically refers to a specific role
+   * or permission level within an application. Examples of roles could be 'admin', 'user', 'mod
+   * @returns If the user's role is not already set to the specified role, the updated user object with
+   * the new role assigned is being returned after saving it in the database.
+   */
+  async assignRoleToUser(userId: number, role: Role): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id: userId });
+
+    // Check if the user exists
+    if (!user) {
+      throw new EntityNotFoundError('User', userId);
+    }
+
+    // Check if the user already has the role
+    if (user.role !== role) {
+      user.role = role;
+      return this.userRepository.save(user);
+    }
   }
 }
