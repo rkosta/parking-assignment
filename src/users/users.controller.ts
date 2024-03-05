@@ -28,6 +28,7 @@ import { Role } from 'src/permissions/role.enum';
   description: 'The token we need for authorization',
 })
 @Controller('users')
+@UseGuards(AdminGuard)
 /* The UsersController class in TypeScript defines methods for creating, retrieving, and transforming
 user data using a UsersService. */
 export class UsersController {
@@ -38,7 +39,6 @@ export class UsersController {
     description: 'Create a new user',
     type: UserDto,
   })
-  @UseGuards(AdminGuard)
   @Post()
   @Serialize(UserDto)
   async create(@Body() createUserDto: CreateUserDto) {
@@ -82,7 +82,6 @@ export class UsersController {
     type: UserDto,
   })
   @Serialize(UserDto)
-  @UseGuards(AdminGuard)
   @Patch(':id')
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
@@ -104,7 +103,6 @@ export class UsersController {
     type: UserDto,
   })
   @Post(':id/assign-role')
-  @UseGuards(AdminGuard)
   async assignRoleToUser(
     @Param('id', ParseIntPipe) userId: number,
     @Query('role', new ParseEnumPipe(Role)) role: Role,
