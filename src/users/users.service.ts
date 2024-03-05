@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dtos/create-user.dto';
 import { Role } from 'src/permissions/role.enum';
 import { Permission } from 'src/permissions/permission.enum';
 import { RolePermission } from 'src/permissions/role-permision.entity';
