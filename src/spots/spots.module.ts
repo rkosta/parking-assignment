@@ -3,7 +3,7 @@ import { SpotsController } from './spots.controller';
 import { SpotsService } from './spots.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Spot } from './spot.entity';
-import { Booking } from 'src/bookings/booking.entity';
+import { Booking } from '../bookings/booking.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Spot, Booking])],

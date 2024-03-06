@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { BookingDto } from './dtos/booking.dto';
-import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { User } from 'src/users/user.entity';
-import { Serialize } from 'src/interceptors/serialize-interceptor';
+import { CurrentUser } from '../decorators/current-user.decorator';
+import { User } from '../users/user.entity';
+import { Serialize } from '../interceptors/serialize-interceptor';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('bookings')

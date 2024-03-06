@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
-import { SpotDto } from 'src/spots/dtos/spot-dto';
-import { UserDto } from 'src/users/dtos/user.dto';
+import { SpotDto } from '../../spots/dtos/spot-dto';
 
 export class BookingDto {
   @ApiProperty({

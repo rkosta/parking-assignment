@@ -1,5 +1,4 @@
-import { IsEnum, IsOptional } from 'class-validator';
-import { Role } from 'src/permissions/role.enum';
+import { IsOptional } from 'class-validator';
 
 /* The `UpdateUserDto` class defines properties for updating a user with optional fields for first
 name, last name, email, token, and isAdmin. */

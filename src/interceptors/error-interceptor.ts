@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Observable, catchError } from 'rxjs';
-import { UnauthorizedError } from 'src/common/errors/unauthorized.error';
+import { UnauthorizedError } from '../common/errors/unauthorized.error';
 import { EntityNotFoundError } from 'typeorm';
 
 export class ErrorInterceptor implements NestInterceptor {

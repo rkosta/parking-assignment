@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, MinLength } from 'class-validator';
-import { Role } from 'src/permissions/role.enum';
+import { Role } from '../../permissions/role.enum';
 
 /* The class `CreateUserDto` defines properties for creating a user with required fields for first
 name, last name, email, and token, along with an optional isAdmin flag. */

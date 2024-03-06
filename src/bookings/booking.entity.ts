@@ -1,5 +1,5 @@
-import { Spot } from 'src/spots/spot.entity';
-import { User } from 'src/users/user.entity';
+import { Spot } from '../spots/spot.entity';
+import { User } from '../users/user.entity';
 import {
   Column,
   CreateDateColumn,

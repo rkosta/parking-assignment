@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Role } from 'src/permissions/role.enum';
+import { Role } from '../../permissions/role.enum';
 
 /* The UserDto class defines properties for a user's first name, last name, email, and admin status,
 with token excluded. */

@@ -2,12 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Booking } from './booking.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Spot } from 'src/spots/spot.entity';
-import { User } from 'src/users/user.entity';
-import { UnauthorizedError } from 'src/common/errors/unauthorized.error';
-import { Role } from 'src/permissions/role.enum';
-import { UsersService } from 'src/users/users.service';
-import { Permission } from 'src/permissions/permission.enum';
+import { Spot } from '../spots/spot.entity';
+import { UnauthorizedError } from '../common/errors/unauthorized.error';
+import { UsersService } from '../users/users.service';
+import { Permission } from '../permissions/permission.enum';
 
 @Injectable()
 export class BookingsService {

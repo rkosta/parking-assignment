@@ -17,10 +17,10 @@ import { UserDto } from './dtos/user.dto';
 import { plainToClass } from 'class-transformer';
 import { User } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dt';
-import { AdminGuard } from 'src/guards/admin-guard';
-import { Serialize } from 'src/interceptors/serialize-interceptor';
+import { AdminGuard } from '../guards/admin-guard';
+import { Serialize } from '../interceptors/serialize-interceptor';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/permissions/role.enum';
+import { Role } from '../permissions/role.enum';
 
 @ApiTags('users')
 @ApiHeader({

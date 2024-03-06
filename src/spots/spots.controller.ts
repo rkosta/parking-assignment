@@ -14,8 +14,8 @@ import { SpotsService } from './spots.service';
 import { CreateSpotDto } from './dtos/create-spot.dto';
 import { SpotDto } from './dtos/spot-dto';
 import { UpdateSpotDto } from './dtos/update-spot.dto';
-import { AdminGuard } from 'src/guards/admin-guard';
-import { Serialize } from 'src/interceptors/serialize-interceptor';
+import { AdminGuard } from '../guards/admin-guard';
+import { Serialize } from '../interceptors/serialize-interceptor';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('spots')
